@@ -70,8 +70,37 @@
 ))
 
 (define (expr-compare-lambda x y lambda a b)
-  (list 'if '% x y)
-)
+  (list lambda (compare-lambda-args (car x) (car y))
+    (lambda-function (car (cdr x)) 
+                     (car (cdr y)) 
+                     (cons (buildx-dict (car x) (car y)) a)
+                     (cons (buildy-dict (car x) (car y)) b))
+))
+(define (compare-lambda-args x y)
+  (cond 
+    ((and (empty? x) (empty? y)) '())
+    ((equal? (car x) (car y)) (cons (car x) (compare-lambda-args (cdr x) (cdr y))))
+    (else (cons (string->symbol (string-append (symbol->string (car x)) "!" (symbol->string (car y)))) 
+                (compare-lambda-args (cdr x) (cdr y))))
+))
+
+(define (lambda-function x y a b)
+  (cond
+    
+
+))
+(define (buildx-dict x y )
+  (cond
+    ((and (empty? x) (empty? y)) (hash))
+    ((equal? (car x) (car y)) (hash-set (buildx-dict (cdr x) (cdr y)) (car x) (car x)))
+    (else (hash-set (buildx-dict (cdr x) (cdr y)) (car x) (string->symbol (string-append (symbol->string (car x)) "!" (symbol->string (car y))))))
+))
+(define (buildy-dict x y )
+(cond
+  ((and (empty? x) (empty? y)) (hash))
+  ((equal? (car x) (car y)) (hash-set (buildy-dict (cdr x) (cdr y)) (car y) (car y)))
+  (else (hash-set (buildx-dict (cdr x) (cdr y)) (car x) (string->symbol (string-append (symbol->string (car x)) "!" (symbol->string (car y))))))
+))
 
 (define (test-expr-compare x y)
 (and
