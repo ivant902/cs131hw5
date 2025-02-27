@@ -7,9 +7,9 @@
   ;; if x or y are not lists
   ((or (not(list? x)) (not(list? y))) (list 'if '% x y))
   ;; if x and y are lists but not equal in length
-  ((and (list? x) (list? y) (not (equal? (length? x) (length? y)))) (list 'if '% x y))
+  ((and (list? x) (list? y) (not (equal? (length x) (length y)))) (list 'if '% x y))
   ;; if x and y are lists and equal in length
-  ((and (list? x) (list? y) (equal? (length? x) (length? y))) expr-compare-lists x y)
+  ((and (list? x) (list? y) (equal? (length x) (length y))) (expr-compare-lists x y))
 )) 
 ; uses member to check if lambda is in the expression 
 (define (lambda? x) (member x '(lambda λ)))
@@ -42,11 +42,11 @@
         (else (list 'if '% x y))
       ))
     ; check for only a single lambda symbol
-    ((or (lambda? (car x) (lambda? (car y)))) (list 'if '% x y))
+    ((or (lambda? (car x)) (lambda? (car y))) (list 'if '% x y))
     (else (expr-compare-other x y))
 ))
 ;; comparing non-lambda functions 
-(define (expr-compare-other)
+(define (expr-compare-other x y)
   (cond 
   ; base case
   ((and (empty? x) (empty? y)) '())
@@ -58,7 +58,7 @@
   (else (cond 
     ; case where both elements are same length and are lists
     ; pass the first elements to the basic checker and the rest of the lists to recursively call
-    ((and (list? (car x)) (list? (car y)) (equal? (length? (car x)) (length? (car y)))) 
+    ((and (list? (car x)) (list? (car y)) (equal? (length (car x)) (length (car y)))) 
       (cons (expr-compare-lists (car x) (car y)) (expr-compare-other (cdr x) (cdr y))))
     ; case where both elements are not same length and are lists
     ((and (list? (car x)) (list? (car y)))
