@@ -1,3 +1,4 @@
+#lang racket
 (define (expr-compare x y)
 (cond
   ;; if x and y are just equal
