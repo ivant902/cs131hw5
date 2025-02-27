@@ -73,4 +73,9 @@
   (list 'if '% x y)
 )
 
-
+(define (test-expr-compare x y)
+(and
+ (equal? (eval x) (eval (list 'let '([% #t]) (expr-compare x y))))
+ (equal? (eval y) (eval (list 'let '([% #f]) (expr-compare x y))))
+ )
+)
